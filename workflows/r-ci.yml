@@ -1,0 +1,12 @@
+name: r-ci
+on:
+  workflow_call:
+jobs:
+  r:
+    runs-on: ubuntu-latest
+    container: rocker/r-ver:4.5.0
+    steps:
+      - uses: actions/checkout@v4
+      - run: Rscript -e "install.packages(c('plumber','jsonlite','testthat'))"
+      # renv.lock 就位后改为 renv::restore()，锁文件即唯一依赖真源
+      - run: Rscript -e "if (dir.exists('tests/golden')) message('golden tests pending renv')"
